@@ -6,8 +6,6 @@ import { auth } from '../firebase';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
   signOut as firebaseSignOut,
 } from 'firebase/auth';
 import useTodoStore from '../store';
@@ -35,17 +33,6 @@ const Auth = () => {
     } catch (err) {
       console.error("Auth error:", err);
       setError(err.message || 'Wystąpił błąd.');
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setError('');
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.error("Google Sign-In error:", err);
-      setError(err.message || 'Błąd logowania przez Google.');
     }
   };
 

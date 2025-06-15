@@ -133,15 +133,6 @@ button:disabled {
   opacity: 0.7;
 }
 
-.auth-container button:not([onclick*="handleGoogleSignIn"]):not([onclick*="setIsLogin"]),
-.auth-container button[onclick*="handleSignOut"] {
-  background-color: #3b82f6;
-  color: #ffffff;
-}
-.auth-container button:not([onclick*="handleGoogleSignIn"]):not([onclick*="setIsLogin"]):hover,
-.auth-container button[onclick*="handleSignOut"]:hover {
-  background-color: #2563eb;
-}
 .auth-container button[onclick*="setIsLogin"] {
   background-color: transparent;
   color: #3b82f6;
@@ -150,21 +141,13 @@ button:disabled {
 .auth-container button[onclick*="setIsLogin"]:hover {
   background-color: rgba(59, 130, 246, 0.1);
 }
-.auth-container button[onclick*="handleGoogleSignIn"] {
-  background-color: #dc2626;
-  color: #ffffff;
-}
-.auth-container button[onclick*="handleGoogleSignIn"]:hover {
-  background-color: #b91c1c;
-}
-
 
 .container > div > div[style*="padding: 10px"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem !important;
-  background-color: #252525 !important;
+  background-color: #252525;
   border: 1px solid #333;
   border-radius: 6px;
   margin-bottom: 0.6rem;
@@ -172,7 +155,7 @@ button:disabled {
   word-break: break-word;
 }
 .container > div > div[style*="padding: 10px"]:hover {
-  background-color: #2d2d2d !important;
+  background-color: #2d2d2d;
 }
 
 .container > div > div[style*="padding: 10px"][style*="background-color: rgb(224, 255, 224)"],
@@ -201,7 +184,7 @@ button:disabled {
 
 .container > div > div[style*="padding: 10px"] p[style*="font-size: 0.9em"] {
   font-size: 0.8rem !important;
-  color: #9ca3af !important;
+  color: #d9d9d9 !important;
   margin: 0.2rem 0 0 0 !important;
 }
 
@@ -211,8 +194,9 @@ button:disabled {
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   display: inline-block;
-  color: #9ca3af !important;
+  color: #d9d9d9 !important;
 }
+
 .container > div > div[style*="padding: 10px"] p[style*="color: red"] {
   background-color: rgba(239, 68, 68, 0.15);
   color: #ef4444 !important;

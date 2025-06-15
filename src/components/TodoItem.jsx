@@ -1,16 +1,28 @@
 import React from 'react';
 import useTodoStore from '../store';
 
-const getDueDateStatus = (dueDate) => {};
+const getDueDateStatus = (dueDate) => {
+  if (!dueDate) return '#9ca3af';
+  const today = new Date();
+  const due = new Date(dueDate);
+  const diffInMs = due - today;
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+  if (due < today) {
+    return '#7f1d1d';
+  } else if (diffInDays <= 4) {
+    return '#b37b1b';
+  }
+  return '#252525';
+};
 
 const TodoItem = ({ todo }) => {
-  const { toggleDone, deleteTodo } = useTodoStore(state => ({
+  const { toggleDone, deleteTodo } = useTodoStore((state) => ({
     toggleDone: state.toggleDone,
     deleteTodo: state.deleteTodo,
   }));
 
   const dueDateStatus = getDueDateStatus(todo.dueDate);
-  
+
   const itemStyle = {
     padding: '10px',
     border: '1px solid #eee',
@@ -18,23 +30,9 @@ const TodoItem = ({ todo }) => {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: todo.done ? '#e0ffe0' : 'white',
-    opacity: todo.isPending ? 0.6 : 1, 
-    borderLeft: todo.isPending ? '3px solid orange' : (
-        dueDateStatus === 'overdue' && !todo.done ? '3px solid red' : (
-        dueDateStatus === 'nearing' && !todo.done ? '3px solid orange' : '3px solid transparent'
-        )
-    ),
+    backgroundColor: todo.done ? '#e0ffe0' : dueDateStatus,
+    opacity: todo.isPending ? 0.6 : 1,
   };
-
-  if (dueDateStatus === 'overdue' && !todo.done && !todo.isPending) {
-    itemStyle.borderColor = 'red';
-    itemStyle.borderWidth = '2px';
-  } else if (dueDateStatus === 'nearing' && !todo.done && !todo.isPending) {
-    itemStyle.borderColor = 'orange';
-    itemStyle.borderWidth = '2px';
-  }
-
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -53,22 +51,48 @@ const TodoItem = ({ todo }) => {
         <span style={{ textDecoration: todo.done ? 'line-through' : 'none' }}>
           <strong>{todo.title}</strong>
         </span>
-        {todo.description && <p style={{ margin: '5px 0 0 0', fontSize: '0.9em', color: '#555' }}>{todo.description}</p>}
-        {todo.dueDate && (
-          <p style={{ margin: '5px 0 0 0', fontSize: '0.8em', color: dueDateStatus === 'overdue' && !todo.done ? 'red' : (dueDateStatus === 'nearing' && !todo.done ? 'orange' : '#777') }}>
-            Termin: {formatDate(todo.dueDate)}
-            {dueDateStatus === 'overdue' && !todo.done && ' (Po terminie!)'}
-            {dueDateStatus === 'nearing' && !todo.done && ' (Termin się zbliża!)'}
+        {todo.description && (
+          <p style={{ margin: '5px 0 0 0', fontSize: '0.9em', color: '#555' }}>
+            {todo.description}
           </p>
         )}
-         {todo.isPending && <small style={{ color: 'orange', marginLeft: '10px', fontStyle: 'italic' }}>(Synchronizowanie...)</small>}
+        {todo.dueDate && (
+          <p
+            style={{
+              margin: '5px 0 0 0',
+              fontSize: '0.8em',
+              color: '#9ca3af',
+            }}
+            className="due-date"
+          >
+            Termin: {formatDate(todo.dueDate)}
+          </p>
+        )}
+        {todo.isPending && (
+          <small
+            style={{
+              color: 'orange',
+              marginLeft: '10px',
+              fontStyle: 'italic',
+            }}
+          >
+            (Synchronizowanie...)
+          </small>
+        )}
       </div>
-      <button 
-        onClick={() => deleteTodo(todo.id)} 
-        style={{ backgroundColor: '#ffdddd', border: 'none', padding: '5px 10px', cursor: 'pointer' }}
+      <div style={{backgroundColor: '#5f0a1c', borderRadius: '8px'}}>
+      <button
+        onClick={() => deleteTodo(todo.id)}
+        style={{
+          backgroundColor: '#000000',
+          border: '10px',
+          padding: '5px 10px',
+          cursor: 'pointer',
+        }}
       >
         Usuń
       </button>
+      </div>
     </div>
   );
 };

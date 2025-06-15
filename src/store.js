@@ -26,7 +26,6 @@ const useTodoStore = create((set, get) => ({
     set({ isOffline });
   },
 
-
   setUser: (userData) => {
     const currentUnsubscribe = get().unsubscribeTodos;
     if (currentUnsubscribe) {
@@ -35,7 +34,7 @@ const useTodoStore = create((set, get) => ({
     
     if (userData) {
       set({ user: userData, loading: true, todos: [], error: null, unsubscribeTodos: null });
-      get().subscribeToTodos(); // Kluczowe wywołanie
+      get().subscribeToTodos();
     } else {
       set({ user: null, todos: [], loading: false, error: null, unsubscribeTodos: null });
     }
@@ -45,7 +44,7 @@ const useTodoStore = create((set, get) => ({
     const user = get().user;
 
     if (!user) {
-      console.warn("[subscribeToTodos] No user found, aborting subscription."); // LOG
+      console.warn("[subscribeToTodos] No user found, aborting subscription.");
       return;
     }
 
@@ -61,7 +60,7 @@ const useTodoStore = create((set, get) => ({
       (snapshot) => {
 
         if (snapshot.empty) {
-            console.warn("[onSnapshot] Snapshot is EMPTY. No documents found matching the query."); // Zmienione na warn dla lepszej widoczności
+            console.warn("[onSnapshot] Snapshot is EMPTY. No documents found matching the query.");
         }
 
         snapshot.docChanges().forEach((change) => {
@@ -80,7 +79,7 @@ const useTodoStore = create((set, get) => ({
         set({ todos: fetchedTodos, loading: false, error: null });
       }, 
       (err) => {
-        console.error(`[onSnapshot] Error in listener for user ${user.uid}:`, err); // LOG
+        console.error(`[onSnapshot] Error in listener for user ${user.uid}:`, err);
         console.error("[onSnapshot] Error code:", err.code);
         console.error("[onSnapshot] Error message:", err.message);
       }
@@ -206,13 +205,20 @@ const useTodoStore = create((set, get) => ({
 }));
 
 if (typeof window !== 'undefined') {
-  const updateOnlineStatus = () => {
-    const isOnlineNow = navigator.onLine;
-    useTodoStore.getState().setOfflineStatus(!isOnlineNow);
+  const checkConnection = async () => {
+    try {
+      await fetch('https://www.google.com/favicon.ico', { mode: 'no-cors', cache: 'no-store' });
+      useTodoStore.getState().setOfflineStatus(false);
+    } catch (error) {
+      useTodoStore.getState().setOfflineStatus(true);
+    }
   };
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-  updateOnlineStatus();
+
+  checkConnection();
+  const interval = setInterval(checkConnection, 5000);
+  window.addEventListener('unload', () => {
+    clearInterval(interval);
+  });
 }
 
 export default useTodoStore;
